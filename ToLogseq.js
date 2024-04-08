@@ -2,7 +2,7 @@
 // @name         ToLogseq Format Converter for ChatGPT
 // @name:zh-CN   ToLogseq Markdown格式转换器 for ChatGPT
 // @namespace    http://tampermonkey.net/
-// @version      0.1.3
+// @version      0.1.4
 // @description  Convert markdown text to Logseq formatted Markdown text, which is available for ChatGPT and other similar tools using md format.
 // @description:zh-cn 将 Markdown 文本转换为 Logseq 格式的 Markdown 文本，可用于 ChatGPT 和其他使用 md 格式的类似工具。
 // @author       Another_Ghost
@@ -58,7 +58,7 @@
         alertBox.style.position = 'fixed';
         alertBox.style.bottom = '60px';
         alertBox.style.right = '20px';
-        alertBox.style.backgroundColor = 'lightgreen';
+        alertBox.style.backgroundColor = 'lightyellow';
         alertBox.style.padding = '10px';
         alertBox.style.borderRadius = '5px';
         alertBox.style.zIndex = '1001';
