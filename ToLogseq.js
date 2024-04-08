@@ -21,7 +21,7 @@
     const button = document.createElement('button');
     button.textContent = 'ToLogseq'; // Text displayed on the button
     button.style.position = 'fixed'; // Make button position fixed
-    button.style.bottom = '40px';    // Distance from the bottom of the viewport
+    button.style.bottom = '70px';    // Distance from the bottom of the viewport
     button.style.right = '20px';     // Distance from the right of the viewport
     button.style.zIndex = '1000';    // Ensure the button is on top of other elements
 
