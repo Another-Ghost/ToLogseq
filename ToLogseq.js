@@ -56,7 +56,7 @@
         const alertBox = document.createElement('div');
         alertBox.textContent = message;
         alertBox.style.position = 'fixed';
-        alertBox.style.bottom = '80px';
+        alertBox.style.bottom = '75px';
         alertBox.style.right = '20px';
         alertBox.style.backgroundColor = 'lightyellow';
         alertBox.style.padding = '10px';
