@@ -2,7 +2,7 @@
 // @name         ToLogseq Format Converter for ChatGPT
 // @name:zh-CN   ToLogseq Markdown格式转换器 for ChatGPT
 // @namespace    http://tampermonkey.net/
-// @version      0.1.12
+// @version      0.1.11
 // @description  Convert markdown text to Logseq formatted Markdown text, which is available for ChatGPT and other similar tools using md format.
 // @description:zh-cn 将 Markdown 文本转换为 Logseq 格式的 Markdown 文本，可用于 ChatGPT 和其他使用 md 格式的类似工具。
 // @author       Another_Ghost
@@ -21,7 +21,7 @@
     const button = document.createElement('button');
     button.textContent = 'ToLogseq'; // Text displayed on the button
     button.style.position = 'fixed'; // Make button position fixed
-    button.style.bottom = '40px';    // Distance from the bottom of the viewport
+    button.style.bottom = '95px';    // Distance from the bottom of the viewport
     button.style.right = '20px';     // Distance from the right of the viewport
     button.style.zIndex = '1000';    // Ensure the button is on top of other elements
 
@@ -37,7 +37,7 @@
             const clipboardText = await navigator.clipboard.readText(); // Read text from clipboard
             if(clipboardText.includes(mark))
             {
-                showAlert('Already converted to Logseq!', 'lightorange');
+                showAlert('Already converted to Logseq!', 'orange');
             }
             else
             {
@@ -56,9 +56,9 @@
         const alertBox = document.createElement('div');
         alertBox.textContent = message;
         alertBox.style.position = 'fixed';
-        alertBox.style.bottom = '60px';
+        alertBox.style.bottom = '130px';
         alertBox.style.right = '20px';
-        alertBox.style.backgroundColor = 'lightyellow';
+        alertBox.style.backgroundColor = backgroundColor;
         alertBox.style.padding = '10px';
         alertBox.style.borderRadius = '5px';
         alertBox.style.zIndex = '1001';
@@ -78,7 +78,7 @@ function ChatGPTToLogseq(text) {
     let output = '';
     //let bNewBlock = false;
     //let bCode = false;
-    for(let i=0; i<lines.length - 1; i++) {
+    for(let i=0; i<lines.length; i++) {
         // if(!bCode){
         //     if(lines[i].includes('```'))
         //     {
@@ -108,15 +108,22 @@ function ChatGPTToLogseq(text) {
         //     bNewBlock = false;
         // }
 
-        if(lines[i].trim().match(/^\\\[/) && lines[i].trim().match(/\\\])$/))
+        if(lines[i].trim().match(/^\\\[/) && lines[i].trim().match(/\\\]$/))
         {
-            lines[i] = lines[i].trim().replace(/^\\\[ ?/, '$$').replace(/\\\] ?$/, '$$');
+            lines[i] = lines[i].trim().replace(/^\\\[ ?/, "$$$").replace(/\\\] ?$/, "$$$");
         }
         else if(lines[i].trim().match(/^\\\(/) && lines[i].trim().match(/\\\)$/))
         {
-            lines[i] = lines[i].trim().replace(/^\\\(/, '$$').replace(/\\\)$/, '$$');
+            lines[i] = lines[i].trim().replace(/^\\\(/, "$$").replace(/\\\)$/, "$$");
         }
 
+        if(lines[i].trim() !== '')
+        {
+            if(i == lines.length - 1 && !lines[i].match(/^- /))
+                output += '- ' + lines[i] + '\n';
+            else
+                output += lines[i] + '\n';
+        }
         // else
         // {
         //     bNewBlock = true;
@@ -126,6 +133,6 @@ function ChatGPTToLogseq(text) {
         //     output += lines[i] + '\n';
         // }
     }
-    output += "- " + lines[lines.length - 1] + '\n';
+    //output += "- " + lines[lines.length - 1] + '\n';
     return output;
 }
