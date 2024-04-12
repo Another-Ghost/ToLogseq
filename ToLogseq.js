@@ -88,7 +88,7 @@ function ChatGPTToLogseq(text) {
         {
             if(lines[i].match(/^### \d\./))
             {
-                lines[i] = lines[i].replace(/^### (\d\.) /, '### ');
+                lines[i] = lines[i].replace(/^### (\d+\.) /, '### ');
                 lines[i] = lines[i] + '\n' + 'logseq.order-list-type:: number';
             }
             lines[i] = '- ' + lines[i];
