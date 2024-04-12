@@ -2,7 +2,7 @@
 // @name         ToLogseq Format Converter for ChatGPT
 // @name:zh-CN   ToLogseq Markdown格式转换器 for ChatGPT
 // @namespace    http://tampermonkey.net/
-// @version      0.1.12
+// @version      0.2.0
 // @description  Convert markdown text to Logseq formatted Markdown text, which is available for ChatGPT and other similar tools using md format.
 // @description:zh-cn 将 Markdown 文本转换为 Logseq 格式的 Markdown 文本，可用于 ChatGPT 和其他使用 md 格式的类似工具。
 // @author       Another_Ghost
@@ -72,67 +72,26 @@
 })();
 
 function ChatGPTToLogseq(text) {
-    text = text.replace(/\\\[([\s\S]*?)\\\]/g, "$$$1$$$");
-    let lines = text.split('\n');
+
+    text = text.replace(/\\\[([\s\S]*?)\\\]/g, function(match, p1) {
+        return '$$' + p1.trim() + '$$'; // 使用函数替换以确保正确处理特殊字符
+    });
+    text = text.replace(/^( *)- /gm, '$1  - ');
+    text = text.replace(/^### ?\d\. ?(.*)/gm, '- ### $1 \nlogseq.order-list-type:: number');
+    text = text.replace(/^### (.*)/gm, '- ### $1');
+    text = text.replace(/^( *)\d+\. ?(.*)/gm, '$1  - $2\nlogseq.order-list-type:: number');
+    
+    //替换所有代码块，删除空白行后再替换回来
+    let codeMap = {};
+    let codeIndex = 0;
+    text = text.replace(/```([\s\S]*?)```/g, function(match, p1) {
+        codeMap[codeIndex] = p1;
+        return '```' + codeIndex++ + '```';
+    });
     text = text.replace(/\n\n/g, '\n');
-    let output = '';
-    //let bNewBlock = false;
-    //let bCode = false;
-    for(let i=0; i<lines.length; i++) {
-        // if(!bCode){
-        //     if(lines[i].includes('```'))
-        //     {
-        //         bCode = !bCode;
-        //     }
-        if(lines[i].match(/^#/))
-        {
-            if(lines[i].match(/^### \d\./))
-            {
-                lines[i] = lines[i].replace(/^### (\d+\.) /, '### ');
-                lines[i] = lines[i] + '\n' + 'logseq.order-list-type:: number';
-            }
-            lines[i] = '- ' + lines[i];
-        }
-        else if(lines[i].match(/^\d+\./))
-        {
-            lines[i] = lines[i].replace(/^\d+\. /, '');
-            lines[i] = '    - ' + lines[i] + '\n' + 'logseq.order-list-type:: number';
-        }
-        else if (lines[i].match(/^- /))
-        {
-            lines[i] = lines[i].replace(/^- /, '    - ');
-        }
-        // else if(bNewBlock)
-        // {
-        //     lines[i] = '    - ' + lines[i];
-        //     bNewBlock = false;
-        // }
-
-        // if(lines[i].trim().match(/^\\\[/) && lines[i].trim().match(/\\\]$/))
-        // {
-        //     lines[i] = lines[i].trim().replace(/^\\\[ ?/, "$$$").replace(/\\\] ?$/, "$$$");
-        // }
-        // else if(lines[i].trim().match(/^\\\(/) && lines[i].trim().match(/\\\)$/))
-        // {
-        //     lines[i] = lines[i].trim().replace(/^\\\(/, "$$").replace(/\\\)$/, "$$");
-        // }
-
-        if(lines[i].trim() !== '')
-        {
-            if(i == lines.length - 1 && !lines[i].match(/^- /))
-                output += '- ' + lines[i] + '\n';
-            else
-                output += lines[i] + '\n';
-        }
-        // else
-        // {
-        //     bNewBlock = true;
-        // }
-        // }
-        // else{
-        //     output += lines[i] + '\n';
-        // }
-    }
-    //output += "- " + lines[lines.length - 1] + '\n';
-    return output;
+    text = text.replace(/```(\d+)```/g, function(match, p1) {
+        return '```' + codeMap[p1] + '```';
+    });
+    
+    return text;
 }
