@@ -7,49 +7,30 @@ document.getElementById('button').addEventListener('click', function(){
 });
 
 function ChatGPTToLogseq(text) {
-        
+    text = text.replace(/\\\[([\s\S]*?)\\\]/g, function(match, p1) {
+        return '$$' + p1.trim() + '$$'; // 使用函数替换以确保正确处理特殊字符
+    });
     let lines = text.split('\n');
     text = text.replace(/\n\n/g, '\n');
     let output = '';
-    //let bNewBlock = false;
-    //let bCode = false;
     for(let i=0; i<lines.length; i++) {
-        // if(!bCode){
-        //     if(lines[i].includes('```'))
-        //     {
-        //         bCode = !bCode;
-        //     }
-        if(lines[i].match(/^#/))
+        if(lines[i].match(/^#/)) // 匹配标题
         {
-            if(lines[i].match(/^### \d+\./))
+            if(lines[i].match(/^### \d+\./)) // 匹配有序列表
             {
-                lines[i] = lines[i].replace(/^### (\d\.) /, '### ');
+                lines[i] = lines[i].replace(/^### (\d+\.) /, '### ');
                 lines[i] = lines[i] + '\n' + 'logseq.order-list-type:: number';
             }
             lines[i] = '- ' + lines[i];
         }
-        else if(lines[i].match(/^\d+\./))
+        else if(lines[i].match(/^\d+\./)) // 匹配有序列表
         {
             lines[i] = lines[i].replace(/^\d+\. /, '');
             lines[i] = '    - ' + lines[i] + '\n' + 'logseq.order-list-type:: number';
         }
-        else if (lines[i].match(/^- /))
+        else if (lines[i].match(/^- /)) // 匹配无序列表
         {
             lines[i] = lines[i].replace(/^- /, '    - ');
-        }
-        // else if(bNewBlock)
-        // {
-        //     lines[i] = '    - ' + lines[i];
-        //     bNewBlock = false;
-        // }
-
-        if(lines[i].trim().match(/^\\\[/) && lines[i].trim().match(/\\\]$/))
-        {
-            lines[i] = lines[i].trim().replace(/^\\\[ ?/, "$$$").replace(/\\\] ?$/, "$$$");
-        }
-        else if(lines[i].trim().match(/^\\\(/) && lines[i].trim().match(/\\\)$/))
-        {
-            lines[i] = lines[i].trim().replace(/^\\\(/, "$$").replace(/\\\)$/, "$$");
         }
 
         if(lines[i].trim() !== '')
@@ -59,15 +40,6 @@ function ChatGPTToLogseq(text) {
             else
                 output += lines[i] + '\n';
         }
-        // else
-        // {
-        //     bNewBlock = true;
-        // }
-        // }
-        // else{
-        //     output += lines[i] + '\n';
-        // }
     }
-    //output += "- " + lines[lines.length - 1] + '\n';
     return output;
 }

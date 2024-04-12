@@ -2,7 +2,7 @@
 // @name         ToLogseq Format Converter for ChatGPT
 // @name:zh-CN   ToLogseq Markdown格式转换器 for ChatGPT
 // @namespace    http://tampermonkey.net/
-// @version      0.1.11
+// @version      0.1.12
 // @description  Convert markdown text to Logseq formatted Markdown text, which is available for ChatGPT and other similar tools using md format.
 // @description:zh-cn 将 Markdown 文本转换为 Logseq 格式的 Markdown 文本，可用于 ChatGPT 和其他使用 md 格式的类似工具。
 // @author       Another_Ghost
@@ -72,7 +72,7 @@
 })();
 
 function ChatGPTToLogseq(text) {
-        
+    text = text.replace(/\\\[([\s\S]*?)\\\]/g, "$$$1$$$");
     let lines = text.split('\n');
     text = text.replace(/\n\n/g, '\n');
     let output = '';
@@ -108,14 +108,14 @@ function ChatGPTToLogseq(text) {
         //     bNewBlock = false;
         // }
 
-        if(lines[i].trim().match(/^\\\[/) && lines[i].trim().match(/\\\]$/))
-        {
-            lines[i] = lines[i].trim().replace(/^\\\[ ?/, "$$$").replace(/\\\] ?$/, "$$$");
-        }
-        else if(lines[i].trim().match(/^\\\(/) && lines[i].trim().match(/\\\)$/))
-        {
-            lines[i] = lines[i].trim().replace(/^\\\(/, "$$").replace(/\\\)$/, "$$");
-        }
+        // if(lines[i].trim().match(/^\\\[/) && lines[i].trim().match(/\\\]$/))
+        // {
+        //     lines[i] = lines[i].trim().replace(/^\\\[ ?/, "$$$").replace(/\\\] ?$/, "$$$");
+        // }
+        // else if(lines[i].trim().match(/^\\\(/) && lines[i].trim().match(/\\\)$/))
+        // {
+        //     lines[i] = lines[i].trim().replace(/^\\\(/, "$$").replace(/\\\)$/, "$$");
+        // }
 
         if(lines[i].trim() !== '')
         {

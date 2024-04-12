@@ -1,129 +1,62 @@
-- CSS（层叠样式表）可以通过几种不同的方式与HTML文档相关联，来为网页添加样式。以下是将CSS与HTML关联的三种主要方法：
-- ### 内联样式
-  logseq.order-list-type:: number
-  
-  将CSS直接写在HTML元素的`style`属性中。这种方法适用于单个元素的样式，但不推荐用于整个网页，因为它不符合样式与内容分离的原则。  
-  
-  ```html
-  <p style="color: blue; font-size: 18px;">这是带有内联样式的文本。</p>
-  ```
-- ### 内部样式表
-  logseq.order-list-type:: number
-  
-  将CSS写在HTML文档的`<head>`部分的`<style>`标签内。这适用于单个页面的样式定义。  
-  
-  ```html
-  <!DOCTYPE html>
-  <html>
-  <head>
-    <style>
-        p {
-            color: green;
-            font-size: 16px;
-        }
-    </style>
-  </head>
-  <body>
-    <p>这是带有内部样式表的文本。</p>
-  </body>
-  </html>
-  ```
-- ### 外部样式表
-  logseq.order-list-type:: number
-  
-  将CSS写在一个单独的文件中，通常以`.css`为扩展名，然后通过`<link>`标签在HTML文档的`<head>`部分引入。这是最推荐的方法，因为它可以在多个页面中重用样式表，使得样式的管理变得更加集中和高效。  
-	- 创建一个CSS文件（例如`style.css`）:
-	  logseq.order-list-type:: number
-	    
-	  ```css
-	  /* style.css文件内容 */
-	  body {
-	   background-color: lightgrey;
-	  }
-	  
-	  h1 {
-	   color: navy;
-	   margin-left: 20px;
-	  }
-	  ```
-	- 在HTML中引用这个CSS文件：
-	  logseq.order-list-type:: number
-	    
-	  ```html
-	  <!DOCTYPE html>
-	  <html>
-	  <head>
-	   <link rel="stylesheet" type="text/css" href="style.css">
-	  </head>
-	  <body>
-	   <h1>这是带有外部样式表的文本。</h1>
-	  </body>
-	  </html>
-	  ```
-- 通过这些方法，可以有效地将CSS样式应用到HTML文档中，以控制网页的布局和外观。在实际开发中，通常推荐使用外部样式表，因为它提高了样式的复用性并且可以减少HTML文档的大小。
+在关系数据库中，主键（Primary Key）是一个或多个字段的组合，用于唯一标识表中的每行记录。主键的主要目的是确保表中每个记录的唯一性，以及作为其他表引用的目标（通过外键）。主键字段不允许有重复的值，也不允许有空值。
 
+### 主键的主要特征和作用
 
-CSS（层叠样式表）可以通过几种不同的方式与HTML文档相关联，来为网页添加样式。以下是将CSS与HTML关联的三种主要方法：
+1. **唯一性**：
+   - 主键的值必须是唯一的，这意味着每个记录都可以通过其主键值被唯一标识。
 
-### 1. 内联样式
+2. **不可变性**：
+   - 一旦定义，主键字段的值通常不应更改。主键的不变性有助于保持数据的一致性和完整性。
 
-将CSS直接写在HTML元素的`style`属性中。这种方法适用于单个元素的样式，但不推荐用于整个网页，因为它不符合样式与内容分离的原则。
+3. **索引**：
+   - 数据库自动为主键创建索引，以加快数据访问速度。索引使得查找、排序和数据操作更加高效。
 
-```html
-<p style="color: blue; font-size: 18px;">这是带有内联样式的文本。</p>
+4. **引用完整性**：
+   - 主键是外键关系的基础。其他表可以通过外键引用主键表的记录，从而建立表与表之间的关系。
+
+### 主键的示例
+
+考虑一个简单的数据库，包含一个 `Employees` 表，该表用来存储员工信息。可以选择员工的 `EmployeeID` 作为主键：
+
+- **Employees 表**：
+  - EmployeeID (主键)
+  - FirstName
+  - LastName
+  - Email
+  - Phone
+
+每个员工都有一个唯一的 `EmployeeID`，这个 `EmployeeID` 用来标识不同的员工记录。
+
+### SQL 创建主键
+
+创建带有主键的表的 SQL 语句示例：
+
+```sql
+CREATE TABLE Employees (
+  EmployeeID int NOT NULL,
+  FirstName varchar(255),
+  LastName varchar(255),
+  Email varchar(255),
+  Phone varchar(255),
+  PRIMARY KEY (EmployeeID)
+);
 ```
 
-### 2. 内部样式表
+在这个例子中，`EmployeeID` 列被定义为主键，这保证了 `Employees` 表中每行都可以通过一个唯一的 `EmployeeID` 来识别。
 
-将CSS写在HTML文档的`<head>`部分的`<style>`标签内。这适用于单个页面的样式定义。
+### 复合主键
 
-```html
-<!DOCTYPE html>
-<html>
-<head>
-    <style>
-        p {
-            color: green;
-            font-size: 16px;
-        }
-    </style>
-</head>
-<body>
-    <p>这是带有内部样式表的文本。</p>
-</body>
-</html>
+当单一字段不足以唯一标识表中的记录时，可以使用由多个字段组成的复合主键。例如，在一个订单详情表中，可能需要使用 `OrderID` 和 `ProductID` 的组合作为主键，因为单独的 `OrderID` 或 `ProductID` 并不能唯一标识表中的记录。
+
+```sql
+CREATE TABLE OrderDetails (
+  OrderID int,
+  ProductID int,
+  Quantity int,
+  PRIMARY KEY (OrderID, ProductID)
+);
 ```
 
-### 3. 外部样式表
+在这个例子中，`OrderID` 和 `ProductID` 一起作为复合主键，唯一地标识了订单详情表中的每一行。
 
-将CSS写在一个单独的文件中，通常以`.css`为扩展名，然后通过`<link>`标签在HTML文档的`<head>`部分引入。这是最推荐的方法，因为它可以在多个页面中重用样式表，使得样式的管理变得更加集中和高效。
-
-1. 创建一个CSS文件（例如`style.css`）:
-
-   ```css
-   /* style.css文件内容 */
-   body {
-       background-color: lightgrey;
-   }
-
-   h1 {
-       color: navy;
-       margin-left: 20px;
-   }
-   ```
-
-2. 在HTML中引用这个CSS文件：
-
-   ```html
-   <!DOCTYPE html>
-   <html>
-   <head>
-       <link rel="stylesheet" type="text/css" href="style.css">
-   </head>
-   <body>
-       <h1>这是带有外部样式表的文本。</h1>
-   </body>
-   </html>
-   ```
-
-通过这些方法，可以有效地将CSS样式应用到HTML文档中，以控制网页的布局和外观。在实际开发中，通常推荐使用外部样式表，因为它提高了样式的复用性并且可以减少HTML文档的大小。
+主键是关系数据库设计中至关重要的一部分，确保了数据的组织性和可管理性。
