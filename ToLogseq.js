@@ -2,7 +2,7 @@
 // @name         ToLogseq Format Converter for ChatGPT
 // @name:zh-CN   ToLogseq Markdown格式转换器 for ChatGPT
 // @namespace    http://tampermonkey.net/
-// @version      0.2.0
+// @version      0.2.1
 // @description  Convert markdown text to Logseq formatted Markdown text, which is available for ChatGPT and other similar tools using md format.
 // @description:zh-cn 将 Markdown 文本转换为 Logseq 格式的 Markdown 文本，可用于 ChatGPT 和其他使用 md 格式的类似工具。
 // @author       Another_Ghost
@@ -73,11 +73,11 @@
 
 function ChatGPTToLogseq(text) {
 
-    text = text.replace(/\\\[([\s\S]*?)\\\]/g, function(match, p1) {
-        return '$$' + p1.trim() + '$$'; // 使用函数替换以确保正确处理特殊字符
+    text = text.replace(/\\\[([\s\S]*?)\\\]/g, function(match, p1) { // 匹配单行公式
+        return '$$' + p1.trim() + '$$'; 
     });
-    text = text.replace(/^( *)- /gm, '$1  - ');
-    text = text.replace(/^### ?\d\. ?(.*)/gm, '- ### $1 \nlogseq.order-list-type:: number');
+    text = text.replace(/^( *)- /gm, '$1  - '); // 在别的添加 - 操作之前
+    text = text.replace(/^### \d+\. ?(.*)/gm, '- ### $1 \nlogseq.order-list-type:: number');
     text = text.replace(/^### (.*)/gm, '- ### $1');
     text = text.replace(/^( *)\d+\. ?(.*)/gm, '$1  - $2\nlogseq.order-list-type:: number');
     

@@ -8,11 +8,11 @@ document.getElementById('button').addEventListener('click', function(){
 
 function ChatGPTToLogseq(text) {
 
-    text = text.replace(/\\\[([\s\S]*?)\\\]/g, function(match, p1) {
-        return '$$' + p1.trim() + '$$'; // 使用函数替换以确保正确处理特殊字符
+    text = text.replace(/\\\[([\s\S]*?)\\\]/g, function(match, p1) { // 匹配单行公式
+        return '$$' + p1.trim() + '$$'; 
     });
-    text = text.replace(/^( *)- /gm, '$1  - ');
-    text = text.replace(/^### ?\d\. ?(.*)/gm, '- ### $1 \nlogseq.order-list-type:: number');
+    text = text.replace(/^( *)- /gm, '$1  - '); // 在别的添加 - 操作之前
+    text = text.replace(/^### \d+\. ?(.*)/gm, '- ### $1 \nlogseq.order-list-type:: number');
     text = text.replace(/^### (.*)/gm, '- ### $1');
     text = text.replace(/^( *)\d+\. ?(.*)/gm, '$1  - $2\nlogseq.order-list-type:: number');
     
