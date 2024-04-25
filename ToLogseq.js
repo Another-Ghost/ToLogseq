@@ -2,7 +2,7 @@
 // @name         ToLogseq Format Converter for ChatGPT
 // @name:zh-CN   ToLogseq Markdown格式转换器 for ChatGPT
 // @namespace    http://tampermonkey.net/
-// @version      0.2.2
+// @version      0.2.3
 // @description  Convert markdown text to Logseq formatted Markdown text, which is available for ChatGPT and other similar tools using md format.
 // @description:zh-cn 将 Markdown 文本转换为 Logseq 格式的 Markdown 文本，可用于 ChatGPT 和其他使用 md 格式的类似工具。
 // @author       Another_Ghost
@@ -21,7 +21,7 @@
     const button = document.createElement('button');
     button.textContent = 'ToLogseq'; // Text displayed on the button
     button.style.position = 'fixed'; // Make button position fixed
-    button.style.bottom = '95px';    // Distance from the bottom of the viewport
+    button.style.bottom = '100px';    // Distance from the bottom of the viewport
     button.style.right = '20px';     // Distance from the right of the viewport
     button.style.zIndex = '1000';    // Ensure the button is on top of other elements
 
@@ -88,10 +88,16 @@ function ChatGPTToLogseq(text) {
         codeMap[codeIndex] = p1;
         return '```' + codeIndex++ + '```';
     });
-    text = text.replace(/\n\n/g, '\n');
+    text = text.replace(/\n\s*\n( *- )?/g, function(match, p1) {
+        if(match.match(/- $/)){
+            return '\n'+ p1;
+        }
+        else{
+            return '\n- ';
+        }
+    });
     text = text.replace(/```(\d+)```/g, function(match, p1) {
         return '```' + codeMap[p1] + '```';
     });
-    
     return text;
 }
