@@ -19,7 +19,7 @@ function ChatGPTToLogseq(text) {
     //替换所有代码块，删除空白行后再替换回来
     let codeMap = {};
     let codeIndex = 0;
-    text = text.replace(/```([\s\S]*?)```/g, function(match, p1) {
+    text = text.replace(/\n? *```([\s\S]*?)```/g, function(match, p1) {
         codeMap[codeIndex] = p1;
         return '```' + codeIndex++ + '```';
     });
